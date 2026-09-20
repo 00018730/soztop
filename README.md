@@ -15,7 +15,7 @@ Two Uzbek word/number-guessing games (Wordle/Mastermind-style), switchable from 
 - Stats (played / wins / streak) are stored in the browser's `localStorage` — per-device only, nothing synced yet.
 
 ### Kod buzuvchi (Code Breaker)
-- Player picks a **4-digit** (8 tries) or **6-digit** (10 tries) secret code length.
+- Player picks a **4-digit** (6 tries) or **6-digit** (8 tries) secret code length.
 - Digits can repeat in the secret.
 - Same two-pass correct/present scoring as the word game, reused as-is (see `lib/words.js`'s `evaluateGuess`, which is generic over any token array/length).
 - Stats stored the same way, under a separate `localStorage` key.
