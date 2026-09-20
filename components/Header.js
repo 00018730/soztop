@@ -54,7 +54,7 @@ function ThemeToggle() {
   );
 }
 
-export default function Header({ onHelp, onRestart }) {
+export default function Header({ onHelp, onRestart, showDailyBadge = true }) {
   const [dateLabel, setDateLabel] = useState("");
 
   useEffect(() => {
@@ -77,13 +77,15 @@ export default function Header({ onHelp, onRestart }) {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="hidden sm:flex items-center gap-2 bg-surface border border-border rounded-xl px-3 py-1.5">
-          <span className="text-base">📅</span>
-          <div className="leading-tight">
-            <p className="text-[10px] text-text-dim">Bugungi soʻz</p>
-            <p className="text-xs font-bold">{dateLabel || "—"}</p>
+        {showDailyBadge && (
+          <div className="hidden sm:flex items-center gap-2 bg-surface border border-border rounded-xl px-3 py-1.5">
+            <span className="text-base">📅</span>
+            <div className="leading-tight">
+              <p className="text-[10px] text-text-dim">Bugungi soʻz</p>
+              <p className="text-xs font-bold">{dateLabel || "—"}</p>
+            </div>
           </div>
-        </div>
+        )}
         <button
           type="button"
           onClick={onRestart}

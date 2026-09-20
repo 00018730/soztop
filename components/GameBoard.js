@@ -20,9 +20,15 @@ function Tile({ tok, status, filled }) {
   );
 }
 
-export default function GameBoard({ guesses, current, shakeRow }) {
+export default function GameBoard({
+  guesses,
+  current,
+  shakeRow,
+  length = WORD_LENGTH,
+  maxGuesses = MAX_GUESSES,
+}) {
   const rows = [];
-  for (let r = 0; r < MAX_GUESSES; r++) {
+  for (let r = 0; r < maxGuesses; r++) {
     let tokens = [];
     let result = null;
     if (r < guesses.length) {
@@ -37,7 +43,7 @@ export default function GameBoard({ guesses, current, shakeRow }) {
         className={`flex justify-center ${shakeRow === r ? "row-shake" : ""}`}
         style={{ gap: "var(--tile-gap)" }}
       >
-        {Array.from({ length: WORD_LENGTH }).map((_, c) => (
+        {Array.from({ length }).map((_, c) => (
           <Tile
             key={c}
             tok={tokens[c]}

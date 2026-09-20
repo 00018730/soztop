@@ -24,6 +24,65 @@ export function InstructionsCard() {
   );
 }
 
+export function CodeBreakerInstructionsCard() {
+  const steps = [
+    "Yashirin raqamli kodni taxmin qiling.",
+    "Har bir raqam rangi sizga javob beradi.",
+    "Toʻgʻri kodni toping!",
+  ];
+  return (
+    <div className="bg-surface border border-border rounded-2xl p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-lg">🔢</span>
+        <h2 className="font-display font-bold text-base">Qanday oʻynaladi?</h2>
+      </div>
+      <ol className="flex flex-col gap-3">
+        {steps.map((s, i) => (
+          <li key={i} className="flex items-start gap-3">
+            <span className="flex-none w-5 h-5 rounded-full bg-surface-2 border border-border text-[11px] font-bold flex items-center justify-center mt-0.5">
+              {i + 1}
+            </span>
+            <span className="text-sm text-text-dim leading-snug">{s}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+export function CodeBreakerLegendCard() {
+  const rows = [
+    { status: "correct", label: "Toʻgʻri raqam, toʻgʻri oʻrin." },
+    { status: "present", label: "Kodda bor, oʻrni boshqa." },
+    { status: "absent", label: "Bu raqam kodda yoʻq." },
+  ];
+  const styles = {
+    correct: "bg-accent text-accent-ink",
+    present: "bg-amber text-amber-ink",
+    absent: "bg-absent text-absent-text",
+  };
+  return (
+    <div className="bg-surface border border-border rounded-2xl p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-lg">🎯</span>
+        <h2 className="font-display font-bold text-base">Ranglar nimani bildiradi?</h2>
+      </div>
+      <div className="flex flex-col gap-3">
+        {rows.map((r) => (
+          <div key={r.status} className="flex items-center gap-3">
+            <div
+              className={`w-7 h-7 rounded-md flex items-center justify-center font-extrabold text-xs ${styles[r.status]}`}
+            >
+              5
+            </div>
+            <span className="text-sm text-text-dim leading-snug">{r.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function QuoteCard() {
   return (
     <div className="bg-surface border border-border rounded-2xl p-5">

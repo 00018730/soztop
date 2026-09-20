@@ -1,19 +1,49 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import Header from "@/components/Header";
-import ModeSwitch from "@/components/ModeSwitch";
-import MessageBanner from "@/components/MessageBanner";
-import GameBoard from "@/components/GameBoard";
-import Keyboard from "@/components/Keyboard";
-import { InstructionsCard, QuoteCard, DailyImageCard } from "@/components/SidebarCards";
-import HelpModal from "@/components/HelpModal";
-import ResultModal from "@/components/ResultModal";
-import { useGame } from "@/lib/useGame";
+import GameSwitcher from "@/components/GameSwitcher";
+import WordGame from "@/components/WordGame";
+import CodeBreakerGame from "@/components/CodeBreakerGame";
+
+const GAME_KEY = "soztop-active-game";
 
 export default function Home() {
-  const game = useGame();
+  // Defaults to the word game on first paint (and on the server) so
+  // hydration always matches; the user's last choice is restored right
+  // after mount.
+  const [activeGame, setActiveGame] = useState("word");
+  const [mounted, setMounted] = useState(false);
+  const [controls, setControls] = useState({
+    onHelp: () => {},
+    onRestart: () => {},
+    showDailyBadge: true,
+  });
 
-  if (!game.mounted) {
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(GAME_KEY);
+      if (saved === "word" || saved === "codebreaker") setActiveGame(saved);
+    } catch {
+      /* best-effort only */
+    }
+    setMounted(true);
+  }, []);
+
+  function changeGame(game) {
+    setActiveGame(game);
+    try {
+      localStorage.setItem(GAME_KEY, game);
+    } catch {
+      /* best-effort only */
+    }
+  }
+
+  // Passed down to whichever game is active; it hands back its own
+  // help/restart handlers so the one shared Header can drive either game.
+  const registerControls = useCallback((next) => setControls(next), []);
+
+  if (!mounted) {
     return (
       <div className="min-h-dvh bg-bg flex items-center justify-center">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent to-accent-strong animate-pulse" />
@@ -24,72 +54,22 @@ export default function Home() {
   return (
     <div className="min-h-dvh lg:h-dvh lg:overflow-hidden bg-bg">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 h-full flex flex-col">
-        <Header onHelp={() => game.setHelpOpen(true)} onRestart={game.restart} />
+        <Header
+          onHelp={controls.onHelp}
+          onRestart={controls.onRestart}
+          showDailyBadge={controls.showDailyBadge}
+        />
 
         <div className="mb-2.5">
-          <ModeSwitch
-            mode={game.mode}
-            onDaily={game.startDaily}
-            onPractice={() => game.startPractice()}
-          />
+          <GameSwitcher game={activeGame} onChange={changeGame} />
         </div>
 
-        <MessageBanner message={game.message} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_240px] gap-4 lg:gap-6 items-start lg:flex-1 lg:min-h-0 pb-4 lg:pb-2">
-          <div className="hidden lg:flex flex-col gap-4 order-1">
-            <InstructionsCard />
-            <QuoteCard />
-          </div>
-
-          <main className="flex flex-col items-center justify-center gap-3 sm:gap-4 order-3 lg:order-2 h-full min-h-0">
-            <GameBoard
-              guesses={game.guesses}
-              current={game.current}
-              shakeRow={game.shakeRow}
-            />
-            <Keyboard
-              keyStatus={game.keyStatus}
-              onChar={game.pushToken}
-              onEnter={game.submit}
-              onBackspace={game.backspace}
-            />
-          </main>
-
-          <div className="hidden lg:flex flex-col gap-4 order-2 lg:order-3">
-            <DailyImageCard />
-          </div>
-        </div>
-
-        <div className="lg:hidden flex flex-col gap-4 pb-8">
-          <InstructionsCard />
-          <QuoteCard />
-          <DailyImageCard />
-        </div>
+        {activeGame === "word" ? (
+          <WordGame key="word" registerControls={registerControls} />
+        ) : (
+          <CodeBreakerGame key="codebreaker" registerControls={registerControls} />
+        )}
       </div>
-
-      <HelpModal open={game.helpOpen} onClose={() => game.setHelpOpen(false)} />
-      <ResultModal
-        open={game.resultOpen}
-        onClose={() => game.setResultOpen(false)}
-        status={game.status}
-        solution={game.solution}
-        guessCount={game.guesses.length}
-        mode={game.mode}
-        stats={game.stats}
-        onShare={async () => {
-          try {
-            await navigator.clipboard.writeText(game.shareText());
-            return true;
-          } catch {
-            return false;
-          }
-        }}
-        onNextPractice={() => {
-          game.setResultOpen(false);
-          game.startPractice(game.solution?.word);
-        }}
-      />
     </div>
   );
 }
