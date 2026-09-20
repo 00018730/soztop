@@ -1,6 +1,6 @@
 export function InstructionsCard() {
   const steps = [
-    "5 harfli soʻzni taxmin qiling.",
+    "Yashirin soʻzni taxmin qiling.",
     "Harf rangi sizga javob beradi.",
     "Toʻgʻri soʻzni toping!",
   ];

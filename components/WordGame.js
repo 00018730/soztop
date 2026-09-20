@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import ModeSwitch from "@/components/ModeSwitch";
 import MessageBanner from "@/components/MessageBanner";
 import GameBoard from "@/components/GameBoard";
 import Keyboard from "@/components/Keyboard";
+import GameCardHeader from "@/components/GameCardHeader";
+import WordLengthControls from "@/components/WordLengthControls";
 import { InstructionsCard, QuoteCard, DailyImageCard, WordLegendCard } from "@/components/SidebarCards";
 import HelpModal from "@/components/HelpModal";
 import ResultModal from "@/components/ResultModal";
@@ -13,16 +14,12 @@ import { useGame } from "@/lib/useGame";
 export default function WordGame({ registerControls }) {
   const game = useGame();
 
-  // Let the shared Header (rendered by the page shell) drive this game's
-  // help/restart buttons without WordGame needing to know about Header.
+  // Let the shared top bar show this game's streak/daily badge without it
+  // needing to know about useGame internals.
   useEffect(() => {
     if (!registerControls) return;
-    registerControls({
-      onHelp: () => game.setHelpOpen(true),
-      onRestart: game.restart,
-      showDailyBadge: true,
-    });
-  }, [registerControls, game.setHelpOpen, game.restart]);
+    registerControls({ streak: game.stats.streak, showDailyBadge: game.mode === "daily" });
+  }, [registerControls, game.stats.streak, game.mode]);
 
   if (!game.mounted) {
     return (
@@ -34,13 +31,22 @@ export default function WordGame({ registerControls }) {
 
   return (
     <>
-      <div className="mb-2.5">
-        <ModeSwitch
-          mode={game.mode}
-          onDaily={game.startDaily}
-          onPractice={() => game.startPractice()}
+      <GameCardHeader
+        icon="🍃"
+        title="Soʻztop"
+        subtitle={`${game.wordLength} harfli soʻzni top!`}
+        onHelp={() => game.setHelpOpen(true)}
+        onRestart={game.restart}
+      >
+        <WordLengthControls
+          wordLength={game.wordLength}
+          onLength={game.changeWordLength}
+          endless={game.mode === "endless"}
+          onToggleEndless={() =>
+            game.mode === "endless" ? game.startDaily() : game.startEndless()
+          }
         />
-      </div>
+      </GameCardHeader>
 
       <MessageBanner message={game.message} />
 
@@ -56,6 +62,7 @@ export default function WordGame({ registerControls }) {
             guesses={game.guesses}
             current={game.current}
             shakeRow={game.shakeRow}
+            length={game.wordLength}
             cursor={game.cursor}
             onTileClick={game.setCursor}
           />
@@ -79,7 +86,11 @@ export default function WordGame({ registerControls }) {
         <DailyImageCard />
       </div>
 
-      <HelpModal open={game.helpOpen} onClose={() => game.setHelpOpen(false)} />
+      <HelpModal
+        open={game.helpOpen}
+        onClose={() => game.setHelpOpen(false)}
+        wordLength={game.wordLength}
+      />
       <ResultModal
         open={game.resultOpen}
         onClose={() => game.setResultOpen(false)}
@@ -96,9 +107,9 @@ export default function WordGame({ registerControls }) {
             return false;
           }
         }}
-        onNextPractice={() => {
+        onNextWord={() => {
           game.setResultOpen(false);
-          game.startPractice(game.solution?.word);
+          game.startEndless(game.wordLength, game.solution?.word);
         }}
       />
     </>

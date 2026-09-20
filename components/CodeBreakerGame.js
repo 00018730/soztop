@@ -5,6 +5,7 @@ import DigitLengthSwitch from "@/components/DigitLengthSwitch";
 import MessageBanner from "@/components/MessageBanner";
 import GameBoard from "@/components/GameBoard";
 import NumericKeypad from "@/components/NumericKeypad";
+import GameCardHeader from "@/components/GameCardHeader";
 import { CodeBreakerInstructionsCard, CodeBreakerLegendCard } from "@/components/SidebarCards";
 import CodeBreakerHelpModal from "@/components/CodeBreakerHelpModal";
 import CodeBreakerResultModal from "@/components/CodeBreakerResultModal";
@@ -15,12 +16,8 @@ export default function CodeBreakerGame({ registerControls }) {
 
   useEffect(() => {
     if (!registerControls) return;
-    registerControls({
-      onHelp: () => game.setHelpOpen(true),
-      onRestart: game.restart,
-      showDailyBadge: false,
-    });
-  }, [registerControls, game.setHelpOpen, game.restart]);
+    registerControls({ streak: game.stats.streak, showDailyBadge: false });
+  }, [registerControls, game.stats.streak]);
 
   if (!game.mounted) {
     return (
@@ -32,9 +29,15 @@ export default function CodeBreakerGame({ registerControls }) {
 
   return (
     <>
-      <div className="mb-2.5">
+      <GameCardHeader
+        icon="🔐"
+        title="Kod buzuvchi"
+        subtitle={`${game.digitLength} xonali kodni top!`}
+        onHelp={() => game.setHelpOpen(true)}
+        onRestart={game.restart}
+      >
         <DigitLengthSwitch digitLength={game.digitLength} onChange={game.newGame} />
-      </div>
+      </GameCardHeader>
 
       <MessageBanner message={game.message} />
 

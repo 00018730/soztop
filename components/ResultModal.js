@@ -14,7 +14,7 @@ export default function ResultModal({
   mode,
   stats,
   onShare,
-  onNextPractice,
+  onNextWord,
 }) {
   const [shareLabel, setShareLabel] = useState("Natijani nusxalash");
 
@@ -67,13 +67,13 @@ export default function ResultModal({
           >
             {shareLabel}
           </button>
-          {mode === "practice" && (
+          {mode === "endless" && (
             <button
               type="button"
-              onClick={onNextPractice}
+              onClick={onNextWord}
               className="mt-2 w-full bg-surface-2 text-text font-bold text-sm rounded-xl py-3"
             >
-              Yangi soʻz (mashq)
+              Yangi soʻz (cheksiz)
             </button>
           )}
         </div>

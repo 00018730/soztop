@@ -1,24 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Header from "@/components/Header";
-import GameSwitcher from "@/components/GameSwitcher";
+import TopBar from "@/components/TopBar";
+import Sidebar from "@/components/Sidebar";
+import BottomNav from "@/components/BottomNav";
+import GamePicker from "@/components/GamePicker";
+import ComingSoon from "@/components/ComingSoon";
 import WordGame from "@/components/WordGame";
 import CodeBreakerGame from "@/components/CodeBreakerGame";
 
 const GAME_KEY = "soztop-active-game";
 
 export default function Home() {
-  // Defaults to the word game on first paint (and on the server) so
-  // hydration always matches; the user's last choice is restored right
-  // after mount.
+  // Defaults on first paint (and on the server) so hydration always
+  // matches; the user's last choice is restored right after mount.
   const [activeGame, setActiveGame] = useState("word");
+  const [view, setView] = useState("home");
   const [mounted, setMounted] = useState(false);
-  const [controls, setControls] = useState({
-    onHelp: () => {},
-    onRestart: () => {},
-    showDailyBadge: true,
-  });
+  const [gameInfo, setGameInfo] = useState({ streak: 0, showDailyBadge: true });
 
   useEffect(() => {
     try {
@@ -30,18 +29,19 @@ export default function Home() {
     setMounted(true);
   }, []);
 
-  function changeGame(game) {
+  function selectGame(game) {
     setActiveGame(game);
     try {
       localStorage.setItem(GAME_KEY, game);
     } catch {
       /* best-effort only */
     }
+    setView("home");
   }
 
-  // Passed down to whichever game is active; it hands back its own
-  // help/restart handlers so the one shared Header can drive either game.
-  const registerControls = useCallback((next) => setControls(next), []);
+  // Passed down to whichever game is active; it hands back its streak/daily
+  // info so the one shared top bar can reflect either game.
+  const registerControls = useCallback((next) => setGameInfo(next), []);
 
   if (!mounted) {
     return (
@@ -52,24 +52,44 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-dvh lg:h-dvh lg:overflow-hidden bg-bg">
-      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 h-full flex flex-col">
-        <Header
-          onHelp={controls.onHelp}
-          onRestart={controls.onRestart}
-          showDailyBadge={controls.showDailyBadge}
-        />
+    <div className="min-h-dvh lg:h-dvh lg:overflow-hidden bg-bg flex flex-col">
+      <TopBar
+        streak={gameInfo.streak}
+        showDailyBadge={view === "home" && gameInfo.showDailyBadge}
+        onProfileClick={() => setView("settings")}
+      />
 
-        <div className="mb-2.5">
-          <GameSwitcher game={activeGame} onChange={changeGame} />
+      <div className="flex flex-1 min-h-0">
+        <Sidebar view={view} onChange={setView} />
+
+        <div className="flex-1 min-h-0 overflow-y-auto pb-16 md:pb-0">
+          {view === "home" && (
+            <div className="max-w-[1100px] mx-auto px-4 sm:px-6 py-4 flex flex-col lg:h-full">
+              {activeGame === "word" ? (
+                <WordGame key="word" registerControls={registerControls} />
+              ) : (
+                <CodeBreakerGame key="codebreaker" registerControls={registerControls} />
+              )}
+            </div>
+          )}
+
+          {view === "games" && <GamePicker activeGame={activeGame} onSelect={selectGame} />}
+
+          {view === "stats" && (
+            <ComingSoon icon="📊" title="Statistika" note="Oʻyin statistikangiz tez orada shu yerda koʻrinadi." />
+          )}
+
+          {view === "rating" && (
+            <ComingSoon icon="🏆" title="Reyting" note="Boshqa oʻyinchilar bilan reyting jadvali tez orada qoʻshiladi." />
+          )}
+
+          {view === "settings" && (
+            <ComingSoon icon="⚙️" title="Sozlamalar" note="Profil va sozlamalar boʻlimi tez orada ishga tushadi." />
+          )}
         </div>
-
-        {activeGame === "word" ? (
-          <WordGame key="word" registerControls={registerControls} />
-        ) : (
-          <CodeBreakerGame key="codebreaker" registerControls={registerControls} />
-        )}
       </div>
+
+      <BottomNav view={view} onChange={setView} />
     </div>
   );
 }

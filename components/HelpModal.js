@@ -1,4 +1,4 @@
-export default function HelpModal({ open, onClose }) {
+export default function HelpModal({ open, onClose, wordLength = 5, maxGuesses = 6 }) {
   return (
     <div
       className={`fixed inset-0 z-50 flex items-center justify-center p-5 bg-black/55 transition-opacity ${
@@ -22,8 +22,8 @@ export default function HelpModal({ open, onClose }) {
           </button>
           <h2 className="font-display font-bold text-lg mb-3">Qanday oʻynash kerak</h2>
           <p className="text-sm text-text-dim leading-relaxed mb-4">
-            Yashirin <b className="text-text">5 harfli</b> oʻzbekcha soʻzni{" "}
-            <b className="text-text">6 ta urinishda</b> toping.
+            Yashirin <b className="text-text">{wordLength} harfli</b> oʻzbekcha soʻzni{" "}
+            <b className="text-text">{maxGuesses} ta urinishda</b> toping.
           </p>
           <div className="flex flex-col gap-2 mb-4">
             <LegendRow status="correct" label="Harf toʻgʻri va oʻrni ham toʻgʻri." />
