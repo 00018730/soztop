@@ -5,6 +5,7 @@ import TopBar from "@/components/TopBar";
 import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import GamePicker from "@/components/GamePicker";
+import StatsPage from "@/components/StatsPage";
 import ComingSoon from "@/components/ComingSoon";
 import WordGame from "@/components/WordGame";
 import CodeBreakerGame from "@/components/CodeBreakerGame";
@@ -75,9 +76,7 @@ export default function Home() {
 
           {view === "games" && <GamePicker activeGame={activeGame} onSelect={selectGame} />}
 
-          {view === "stats" && (
-            <ComingSoon icon="📊" title="Statistika" note="Oʻyin statistikangiz tez orada shu yerda koʻrinadi." />
-          )}
+          {view === "stats" && <StatsPage />}
 
           {view === "rating" && (
             <ComingSoon icon="🏆" title="Reyting" note="Boshqa oʻyinchilar bilan reyting jadvali tez orada qoʻshiladi." />
