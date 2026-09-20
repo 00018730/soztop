@@ -51,6 +51,8 @@ export default function CodeBreakerGame({ registerControls }) {
             shakeRow={game.shakeRow}
             length={game.digitLength}
             maxGuesses={game.maxGuesses}
+            cursor={game.cursor}
+            onTileClick={game.setCursor}
           />
           <NumericKeypad
             keyStatus={game.keyStatus}

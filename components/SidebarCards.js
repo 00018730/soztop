@@ -24,6 +24,39 @@ export function InstructionsCard() {
   );
 }
 
+export function WordLegendCard() {
+  const rows = [
+    { status: "correct", label: "Harf toʻgʻri va oʻrni ham toʻgʻri." },
+    { status: "present", label: "Harf soʻzda bor, lekin oʻrni boshqa." },
+    { status: "absent", label: "Bu harf soʻzda umuman yoʻq." },
+  ];
+  const styles = {
+    correct: "bg-accent text-accent-ink",
+    present: "bg-amber text-amber-ink",
+    absent: "bg-absent text-absent-text",
+  };
+  return (
+    <div className="bg-surface border border-border rounded-2xl p-5">
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-lg">🎯</span>
+        <h2 className="font-display font-bold text-base">Ranglar nimani bildiradi?</h2>
+      </div>
+      <div className="flex flex-col gap-3">
+        {rows.map((r) => (
+          <div key={r.status} className="flex items-center gap-3">
+            <div
+              className={`w-7 h-7 rounded-md flex items-center justify-center font-extrabold text-xs ${styles[r.status]}`}
+            >
+              Q
+            </div>
+            <span className="text-sm text-text-dim leading-snug">{r.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function CodeBreakerInstructionsCard() {
   const steps = [
     "Yashirin raqamli kodni taxmin qiling.",

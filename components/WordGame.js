@@ -5,7 +5,7 @@ import ModeSwitch from "@/components/ModeSwitch";
 import MessageBanner from "@/components/MessageBanner";
 import GameBoard from "@/components/GameBoard";
 import Keyboard from "@/components/Keyboard";
-import { InstructionsCard, QuoteCard, DailyImageCard } from "@/components/SidebarCards";
+import { InstructionsCard, QuoteCard, DailyImageCard, WordLegendCard } from "@/components/SidebarCards";
 import HelpModal from "@/components/HelpModal";
 import ResultModal from "@/components/ResultModal";
 import { useGame } from "@/lib/useGame";
@@ -47,11 +47,18 @@ export default function WordGame({ registerControls }) {
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_240px] gap-4 lg:gap-6 items-start lg:flex-1 lg:min-h-0 pb-4 lg:pb-2">
         <div className="hidden lg:flex flex-col gap-4 order-1">
           <InstructionsCard />
+          <WordLegendCard />
           <QuoteCard />
         </div>
 
         <main className="flex flex-col items-center justify-center gap-3 sm:gap-4 order-3 lg:order-2 h-full min-h-0">
-          <GameBoard guesses={game.guesses} current={game.current} shakeRow={game.shakeRow} />
+          <GameBoard
+            guesses={game.guesses}
+            current={game.current}
+            shakeRow={game.shakeRow}
+            cursor={game.cursor}
+            onTileClick={game.setCursor}
+          />
           <Keyboard
             keyStatus={game.keyStatus}
             onChar={game.pushToken}
@@ -67,6 +74,7 @@ export default function WordGame({ registerControls }) {
 
       <div className="lg:hidden flex flex-col gap-4 pb-8">
         <InstructionsCard />
+        <WordLegendCard />
         <QuoteCard />
         <DailyImageCard />
       </div>

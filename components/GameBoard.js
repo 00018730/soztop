@@ -2,7 +2,7 @@
 
 import { MAX_GUESSES, WORD_LENGTH, tokenLabel } from "@/lib/words";
 
-function Tile({ tok, status, filled }) {
+function Tile({ tok, status, filled, selected, clickable, onClick }) {
   const base =
     "rounded-lg border-2 flex items-center justify-center font-extrabold uppercase select-none transition-colors";
   let style = "bg-surface border-border-soft text-text";
@@ -10,9 +10,13 @@ function Tile({ tok, status, filled }) {
   if (status === "correct") style = "bg-accent border-accent text-accent-ink";
   if (status === "present") style = "bg-amber border-amber text-amber-ink";
   if (status === "absent") style = "bg-absent border-absent text-absent-text";
+  if (selected) style += " outline outline-2 outline-offset-1 outline-accent";
   return (
     <div
-      className={`${base} ${style}`}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onClick={clickable ? onClick : undefined}
+      className={`${base} ${style} ${clickable ? "cursor-pointer" : ""}`}
       style={{ width: "var(--tile)", height: "var(--tile)", fontSize: "calc(var(--tile) * 0.34)" }}
     >
       {tok ? tokenLabel(tok) : ""}
@@ -26,7 +30,10 @@ export default function GameBoard({
   shakeRow,
   length = WORD_LENGTH,
   maxGuesses = MAX_GUESSES,
+  cursor = null,
+  onTileClick,
 }) {
+  const activeRow = guesses.length;
   const rows = [];
   for (let r = 0; r < maxGuesses; r++) {
     let tokens = [];
@@ -37,6 +44,7 @@ export default function GameBoard({
     } else if (r === guesses.length) {
       tokens = current;
     }
+    const isActive = r === activeRow && !!onTileClick;
     rows.push(
       <div
         key={r}
@@ -48,7 +56,10 @@ export default function GameBoard({
             key={c}
             tok={tokens[c]}
             status={result ? result[c] : null}
-            filled={!!tokens[c]}
+            filled={tokens[c] != null}
+            selected={isActive && cursor === c}
+            clickable={isActive}
+            onClick={isActive ? () => onTileClick(c) : undefined}
           />
         ))}
       </div>
