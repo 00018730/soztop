@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useProfile } from "@/lib/useProfile";
 
 export default function SettingsPage() {
-  const { profile, loading, updateUsername } = useProfile();
+  const { profile, loading, configured, updateUsername } = useProfile();
   const [name, setName] = useState("");
   const [status, setStatus] = useState("idle"); // idle | saving | saved | error
   const [errorMsg, setErrorMsg] = useState("");
@@ -39,7 +39,11 @@ export default function SettingsPage() {
           <h2 className="font-display font-bold text-base">Profil</h2>
         </div>
 
-        {loading ? (
+        {!configured ? (
+          <p className="text-sm text-danger">
+            Supabase ulanmagan — muhit oʻzgaruvchilari (.env.local yoki hosting) tekshirilsin.
+          </p>
+        ) : loading ? (
           <div className="flex items-center gap-3 text-sm text-text-dim">
             <div className="w-5 h-5 rounded-full bg-gradient-to-br from-accent to-accent-strong animate-pulse" />
             Yuklanmoqda...

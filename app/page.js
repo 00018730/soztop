@@ -7,7 +7,7 @@ import BottomNav from "@/components/BottomNav";
 import GamePicker from "@/components/GamePicker";
 import StatsPage from "@/components/StatsPage";
 import SettingsPage from "@/components/SettingsPage";
-import ComingSoon from "@/components/ComingSoon";
+import ReytingPage from "@/components/ReytingPage";
 import WordGame from "@/components/WordGame";
 import CodeBreakerGame from "@/components/CodeBreakerGame";
 
@@ -79,9 +79,7 @@ export default function Home() {
 
           {view === "stats" && <StatsPage />}
 
-          {view === "rating" && (
-            <ComingSoon icon="🏆" title="Reyting" note="Boshqa oʻyinchilar bilan reyting jadvali tez orada qoʻshiladi." />
-          )}
+          {view === "rating" && <ReytingPage />}
 
           {view === "settings" && <SettingsPage />}
         </div>
