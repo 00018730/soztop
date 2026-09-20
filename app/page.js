@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import BottomNav from "@/components/BottomNav";
 import GamePicker from "@/components/GamePicker";
 import StatsPage from "@/components/StatsPage";
+import SettingsPage from "@/components/SettingsPage";
 import ComingSoon from "@/components/ComingSoon";
 import WordGame from "@/components/WordGame";
 import CodeBreakerGame from "@/components/CodeBreakerGame";
@@ -82,9 +83,7 @@ export default function Home() {
             <ComingSoon icon="🏆" title="Reyting" note="Boshqa oʻyinchilar bilan reyting jadvali tez orada qoʻshiladi." />
           )}
 
-          {view === "settings" && (
-            <ComingSoon icon="⚙️" title="Sozlamalar" note="Profil va sozlamalar boʻlimi tez orada ishga tushadi." />
-          )}
+          {view === "settings" && <SettingsPage />}
         </div>
       </div>
 
