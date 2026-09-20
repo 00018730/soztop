@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0f1c;
+  --bg-soft: #0d1526;
+  --surface: #121b30;
+  --surface-2: #182543;
+  --border: #23304e;
+  --border-soft: #1c2740;
+  --text: #f4f6fb;
+  --text-dim: #93a1bf;
+  --text-faint: #5c6a8c;
+  --accent: #34d399;
+  --accent-strong: #10b981;
+  --accent-ink: #04140d;
+  --amber: #f5a524;
+  --amber-ink: #3a2405;
+  --absent: #1a2439;
+  --absent-text: #67759a;
+  --danger: #f87171;
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f6fb;
+  --bg-soft: #eceff8;
+  --surface: #ffffff;
+  --surface-2: #eef1f9;
+  --border: #dbe1ef;
+  --border-soft: #e5e9f4;
+  --text: #101728;
+  --text-dim: #576080;
+  --text-faint: #8a91ab;
+  --accent: #059669;
+  --accent-strong: #047857;
+  --accent-ink: #ecfdf5;
+  --amber: #b45f06;
+  --amber-ink: #fff4e0;
+  --absent: #e4e8f2;
+  --absent-text: #98a1bd;
+  --danger: #dc2626;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f4f6fb;
+    --bg-soft: #eceff8;
+    --surface: #ffffff;
+    --surface-2: #eef1f9;
+    --border: #dbe1ef;
+    --border-soft: #e5e9f4;
+    --text: #101728;
+    --text-dim: #576080;
+    --text-faint: #8a91ab;
+    --accent: #059669;
+    --accent-strong: #047857;
+    --accent-ink: #ecfdf5;
+    --amber: #b45f06;
+    --amber-ink: #fff4e0;
+    --absent: #e4e8f2;
+    --absent-text: #98a1bd;
+    --danger: #dc2626;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-text-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-ink: var(--accent-ink);
+  --color-amber: var(--amber);
+  --color-amber-ink: var(--amber-ink);
+  --color-absent: var(--absent);
+  --color-absent-text: var(--absent-text);
+  --color-danger: var(--danger);
+  --font-display: "Segoe UI", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/* Board tile and keyboard key sizes shrink on short viewports so the whole
+   game (board + keyboard) always fits without scrolling, the way Wordle's
+   own layout does. */
+:root {
+  --tile: clamp(34px, 6.4dvh, 62px);
+  --tile-gap: clamp(4px, 0.9dvh, 8px);
+  --key-h: clamp(32px, 5dvh, 46px);
+  --key-gap: clamp(4px, 0.7dvh, 6px);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-display), "Segoe UI", sans-serif;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.tile-pop {
+  animation: pop 0.12s ease;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translateX(-2px);
+  }
+  20%,
+  80% {
+    transform: translateX(4px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-7px);
+  }
+  40%,
+  60% {
+    transform: translateX(7px);
+  }
+}
+.row-shake {
+  animation: shake 0.35s;
+}
+
+@keyframes flipIn {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+.tile-flip {
+  animation: flipIn 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile-pop,
+  .row-shake,
+  .tile-flip {
+    animation: none !important;
+  }
+}
