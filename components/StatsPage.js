@@ -183,11 +183,10 @@ function ColorStatsBody({ stats }) {
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         <Tile n={stats.played} l="OʻYNALGAN" />
         <Tile n={avgScore} l="OʻRTACHA BALL" />
         <Tile n={stats.bestScore} l="ENG YAXSHI" />
-        <Tile n={stats.streak} l="JORIY KETMA-KET" />
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-5">
@@ -237,11 +236,10 @@ function SpotStatsBody({ stats }) {
   const avgScore = stats.played > 0 ? Math.round(stats.totalScore / stats.played) : 0;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-3 gap-3">
       <Tile n={stats.played} l="OʻYNALGAN" />
       <Tile n={avgScore} l="OʻRTACHA DARAJA" />
       <Tile n={stats.bestScore} l="ENG YAXSHI" />
-      <Tile n={stats.streak} l="JORIY KETMA-KET" />
     </div>
   );
 }
@@ -250,11 +248,10 @@ function MemoryStatsBody({ stats }) {
   const avgMoves = stats.played > 0 ? Math.round(stats.totalMoves / stats.played) : 0;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-3 gap-3">
       <Tile n={stats.played} l="OʻYNALGAN" />
       <Tile n={avgMoves} l="OʻRTACHA HARAKAT" />
       <Tile n={stats.bestMoves} l="ENG YAXSHI" />
-      <Tile n={stats.streak} l="JORIY KETMA-KET" />
     </div>
   );
 }
@@ -263,11 +260,10 @@ function SlideStatsBody({ stats }) {
   const avgMoves = stats.played > 0 ? Math.round(stats.totalMoves / stats.played) : 0;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div className="grid grid-cols-3 gap-3">
       <Tile n={stats.played} l="OʻYNALGAN" />
       <Tile n={avgMoves} l="OʻRTACHA HARAKAT" />
       <Tile n={stats.bestMoves} l="ENG YAXSHI" />
-      <Tile n={stats.streak} l="JORIY KETMA-KET" />
     </div>
   );
 }

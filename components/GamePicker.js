@@ -38,7 +38,7 @@ const GAMES = [
     id: "memory",
     icon: "🧠",
     title: "Xotira o'yini",
-    subtitle: "Juftliklarni his qiluvchi xotiradan toping — har kuni yangi jadval.",
+    subtitle: "Juftliklarni his qiluvchi xotiradan toping — istagancha o'ynang.",
   },
   {
     id: "connectfour",

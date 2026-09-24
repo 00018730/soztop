@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GameCardHeader from "@/components/GameCardHeader";
+import ShareButton from "@/components/ShareButton";
 import ConnectFourBoard from "@/components/ConnectFourBoard";
 import { checkWinner, flatToBoard } from "@/lib/connectFour";
 import { useConnectFourLocal } from "@/lib/useConnectFourLocal";
@@ -113,6 +114,12 @@ function LocalBoard({ local }) {
     statusText = `${local.turn === "x" ? "🔴" : "🟡"} navbati`;
   }
 
+  const shareableWin =
+    local.status === "over" &&
+    local.mode === "computer" &&
+    local.difficulty === "hard" &&
+    local.result?.winner === "x";
+
   return (
     <>
       <p className="text-sm font-bold text-center">{statusText}</p>
@@ -141,6 +148,10 @@ function LocalBoard({ local }) {
           </>
         )}
       </div>
+
+      {shareableWin && (
+        <ShareButton getText={local.shareText} variant="secondary" className="w-full" />
+      )}
 
       <button
         type="button"

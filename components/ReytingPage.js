@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { WORD_LENGTHS, dailyIndexForDate } from "@/lib/words";
 import { solutionsFor } from "@/lib/wordlist";
-import { colorDailyIndex } from "@/lib/colors";
 import { createClient } from "@/lib/supabase/client";
 import { useProfile } from "@/lib/useProfile";
 
@@ -20,10 +19,10 @@ const GAMES = [
   { id: "slide", label: "15 boshqotirma", icon: "🧩" },
 ];
 
-// Score-based daily games share the same daily-index and query shape — only
-// the `game` id, `length` column, sort direction and display unit differ.
-// Higher-is-better games (color, spot) sort descending; lower-is-better
-// games (memory/slide: fewer moves wins) sort ascending.
+// Rang topish / Farqni top / Xotira o'yini / 15 boshqotirma are unlimited
+// replay, not daily — there's no single shared puzzle to compare "today",
+// so Reyting ranks these by personal best instead (leaderboard_totals'
+// min_score for lower-is-better games, max_score for higher-is-better).
 const SCORE_GAMES = {
   color: { length: 3, sortAsc: false, unit: "ball" },
   spot: { length: 9, sortAsc: false, unit: "daraja" },
@@ -42,6 +41,8 @@ export default function ReytingPage() {
   const [rows, setRows] = useState(null); // null = loading
   const [error, setError] = useState(null);
 
+  const scoreGame = SCORE_GAMES[game];
+
   useEffect(() => {
     let cancelled = false;
     setRows(null);
@@ -53,34 +54,19 @@ export default function ReytingPage() {
         return;
       }
 
-      if (SCORE_GAMES[game]) {
-        const { length, sortAsc } = SCORE_GAMES[game];
-        if (tab === "today") {
-          const dailyIndex = colorDailyIndex(new Date());
-          const { data, error: err } = await supabase
-            .from("daily_results")
-            .select("score, created_at, user_id, profiles(username, avatar)")
-            .eq("game", game)
-            .eq("length", length)
-            .eq("daily_index", dailyIndex)
-            .order("score", { ascending: sortAsc })
-            .order("created_at", { ascending: true })
-            .limit(50);
-          if (cancelled) return;
-          if (err) setError(err.message);
-          else setRows(data ?? []);
-        } else {
-          const { data, error: err } = await supabase
-            .from("leaderboard_totals")
-            .select("user_id, username, avatar, played, avg_score")
-            .eq("game", game)
-            .eq("length", length)
-            .order("avg_score", { ascending: sortAsc, nullsFirst: false })
-            .limit(50);
-          if (cancelled) return;
-          if (err) setError(err.message);
-          else setRows(data ?? []);
-        }
+      if (scoreGame) {
+        const { length, sortAsc } = scoreGame;
+        const bestColumn = sortAsc ? "min_score" : "max_score";
+        const { data, error: err } = await supabase
+          .from("leaderboard_totals")
+          .select(`user_id, username, avatar, played, ${bestColumn}`)
+          .eq("game", game)
+          .eq("length", length)
+          .order(bestColumn, { ascending: sortAsc, nullsFirst: false })
+          .limit(50);
+        if (cancelled) return;
+        if (err) setError(err.message);
+        else setRows(data ?? []);
         return;
       }
 
@@ -117,7 +103,7 @@ export default function ReytingPage() {
     return () => {
       cancelled = true;
     };
-  }, [supabase, game, wordLength, tab]);
+  }, [supabase, game, wordLength, tab, scoreGame]);
 
   return (
     <div className="max-w-[640px] mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5">
@@ -159,20 +145,30 @@ export default function ReytingPage() {
           </div>
         )}
 
-        <div className="flex items-center gap-1 bg-surface-2 border border-border rounded-full p-1">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setTab(t.id)}
-              className={`rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
-                tab === t.id ? "bg-accent text-accent-ink" : "text-text-dim"
-              }`}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
+        {/* Only So'ztop still has a real "today" — the other games are
+            unlimited replay and always show personal-best ranking. */}
+        {game === "word" && (
+          <div className="flex items-center gap-1 bg-surface-2 border border-border rounded-full p-1">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTab(t.id)}
+                className={`rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
+                  tab === t.id ? "bg-accent text-accent-ink" : "text-text-dim"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {scoreGame && (
+          <span className="text-xs font-bold text-text-dim bg-surface-2 border border-border rounded-full px-3 py-1.5">
+            Eng yaxshi natijalar
+          </span>
+        )}
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-5">
@@ -187,11 +183,11 @@ export default function ReytingPage() {
 
         {rows && rows.length === 0 && (
           <p className="text-sm text-text-dim">
-            {tab === "today"
-              ? SCORE_GAMES[game]
-                ? "Bugun hali hech kim oʻynamagan. Birinchi boʻling!"
-                : "Bugun hali hech kim gʻolib boʻlmagan. Birinchi boʻling!"
-              : "Bu uzunlik uchun hali natijalar yoʻq."}
+            {scoreGame
+              ? "Hali hech kim oʻynamagan. Birinchi boʻling!"
+              : tab === "today"
+                ? "Bugun hali hech kim gʻolib boʻlmagan. Birinchi boʻling!"
+                : "Bu uzunlik uchun hali natijalar yoʻq."}
           </p>
         )}
 
@@ -199,8 +195,9 @@ export default function ReytingPage() {
           <ol className="flex flex-col gap-1.5">
             {rows.map((row, i) => {
               const isMe = user && row.user_id === user.id;
-              const name = tab === "today" ? row.profiles?.username : row.username;
-              const avatar = tab === "today" ? row.profiles?.avatar : row.avatar;
+              const name = tab === "today" && !scoreGame ? row.profiles?.username : row.username;
+              const avatar = tab === "today" && !scoreGame ? row.profiles?.avatar : row.avatar;
+              const bestValue = scoreGame ? (scoreGame.sortAsc ? row.min_score : row.max_score) : null;
               return (
                 <li
                   key={row.user_id ?? i}
@@ -216,21 +213,13 @@ export default function ReytingPage() {
                     {name || "Oʻyinchi"}
                     {isMe && " (siz)"}
                   </span>
-                  {SCORE_GAMES[game] ? (
-                    tab === "today" ? (
-                      <span className="text-sm font-extrabold">
-                        {row.score} {SCORE_GAMES[game].unit}
-                      </span>
-                    ) : (
-                      <span className="text-sm font-extrabold">
-                        {row.avg_score != null
-                          ? `${row.avg_score} oʻrt. ${SCORE_GAMES[game].unit}`
-                          : "—"}
-                        {row.played != null && (
-                          <span className="text-text-dim font-bold"> · {row.played} oʻyin</span>
-                        )}
-                      </span>
-                    )
+                  {scoreGame ? (
+                    <span className="text-sm font-extrabold">
+                      {bestValue != null ? `${bestValue} ${scoreGame.unit}` : "—"}
+                      {row.played != null && (
+                        <span className="text-text-dim font-bold"> · {row.played} oʻyin</span>
+                      )}
+                    </span>
                   ) : tab === "today" ? (
                     <span className="text-sm font-extrabold">{row.guesses}/6</span>
                   ) : (

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import GameCardHeader from "@/components/GameCardHeader";
+import ShareButton from "@/components/ShareButton";
 import { use2048 } from "@/lib/use2048";
 import { SIZE, WIN_VALUE } from "@/lib/game2048";
 
@@ -104,6 +105,7 @@ export default function Game2048({ registerControls }) {
               <div className="bg-surface rounded-2xl p-5 text-center max-w-xs shadow-2xl">
                 <p className="font-display font-extrabold text-lg mb-1">Siz yutdingiz! 🎉</p>
                 <p className="text-sm text-text-dim mb-4">{WIN_VALUE} katakchaga yetdingiz.</p>
+                <ShareButton getText={game.shareText} variant="secondary" className="w-full mb-2" />
                 <div className="flex gap-2">
                   <button
                     type="button"
@@ -129,6 +131,7 @@ export default function Game2048({ registerControls }) {
               <div className="bg-surface rounded-2xl p-5 text-center max-w-xs shadow-2xl">
                 <p className="font-display font-extrabold text-lg mb-1">Oʻyin tugadi</p>
                 <p className="text-sm text-text-dim mb-4">{game.score} ball toʻpladingiz.</p>
+                <ShareButton getText={game.shareText} variant="secondary" className="w-full mb-2" />
                 <button
                   type="button"
                   onClick={game.newGame}

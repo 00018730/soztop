@@ -17,8 +17,8 @@ export default function ColorMatchGame({ registerControls }) {
 
   useEffect(() => {
     if (!registerControls) return;
-    registerControls({ streak: game.stats.streak, showDailyBadge: true });
-  }, [registerControls, game.stats.streak]);
+    registerControls({ streak: 0, showDailyBadge: false });
+  }, [registerControls]);
 
   if (!game.mounted || game.phase === "loading") {
     return (
@@ -35,7 +35,7 @@ export default function ColorMatchGame({ registerControls }) {
       <GameCardHeader
         icon="🎨"
         title="Rang topish"
-        subtitle="Koʻrsatilgan rangni slaiderlar bilan qayta hosil qiling."
+        subtitle="Koʻrsatilgan rangni slaiderlar bilan qayta hosil qiling — istagancha o'ynang."
         onHelp={() => game.setHelpOpen(true)}
         onRestart={game.restart}
       />
@@ -127,12 +127,18 @@ export default function ColorMatchGame({ registerControls }) {
             <div className="flex gap-2">
               <Stat n={game.stats.played} l="OʻYNALGAN" />
               <Stat n={avgScore} l="OʻRTACHA" />
-              <Stat n={game.stats.streak} l="KETMA-KET" />
+              <Stat n={game.stats.bestScore} l="ENG YAXSHI" />
             </div>
 
-            <ShareButton getText={game.shareText} className="w-full" />
+            <ShareButton getText={game.shareText} variant="secondary" className="w-full" />
 
-            <p className="text-xs text-text-dim text-center">Ertaga yangi rang bilan qaytib keling!</p>
+            <button
+              type="button"
+              onClick={game.restart}
+              className="w-full bg-accent text-accent-ink font-extrabold text-sm rounded-xl py-3"
+            >
+              Yana oʻynash
+            </button>
           </>
         )}
       </div>
@@ -197,8 +203,8 @@ function ColorHelpModal({ open, onClose }) {
           </p>
           <p className="text-sm text-text-dim leading-relaxed">
             Natijangiz <b className="text-text">0 dan 100 gacha</b> ball bilan baholanadi —
-            qanchalik yaqin boʻlsa, ball shunchalik yuqori. Har kuni bitta yangi rang, faqat bitta
-            urinish.
+            qanchalik yaqin boʻlsa, ball shunchalik yuqori. Istagancha oʻynang — Reytingda eng
+            yaxshi ballingiz koʻrsatiladi.
           </p>
           <button
             type="button"

@@ -10,8 +10,8 @@ export default function MemoryMatchGame({ registerControls }) {
 
   useEffect(() => {
     if (!registerControls) return;
-    registerControls({ streak: game.stats.streak, showDailyBadge: true });
-  }, [registerControls, game.stats.streak]);
+    registerControls({ streak: 0, showDailyBadge: false });
+  }, [registerControls]);
 
   if (!game.mounted || game.phase === "loading" || !game.cards) {
     return (
@@ -30,7 +30,7 @@ export default function MemoryMatchGame({ registerControls }) {
       <GameCardHeader
         icon="🧠"
         title="Xotira o'yini"
-        subtitle="Juftliklarni his qiluvchi xotiradan toping — har kuni yangi jadval."
+        subtitle="Juftliklarni his qiluvchi xotiradan toping — istagancha o'ynang."
         onHelp={() => game.setHelpOpen(true)}
         onRestart={game.restart}
       >
@@ -82,12 +82,17 @@ export default function MemoryMatchGame({ registerControls }) {
               <Stat n={game.stats.played} l="OʻYNALGAN" />
               <Stat n={avgMoves} l="OʻRTACHA" />
               <Stat n={game.stats.bestMoves} l="ENG YAXSHI" />
-              <Stat n={game.stats.streak} l="KETMA-KET" />
             </div>
 
-            <ShareButton getText={game.shareText} className="w-full" />
+            <ShareButton getText={game.shareText} variant="secondary" className="w-full" />
 
-            <p className="text-xs text-text-dim text-center">Ertaga yangi jadval bilan qaytib keling!</p>
+            <button
+              type="button"
+              onClick={game.restart}
+              className="w-full bg-accent text-accent-ink font-extrabold text-sm rounded-xl py-3"
+            >
+              Yana oʻynash
+            </button>
           </>
         )}
       </div>
@@ -137,8 +142,8 @@ function MemoryHelpModal({ open, onClose }) {
             Barcha juftliklarni topsangiz — oʻyin tugaydi. Maqsad — kamroq harakat bilan yakunlash.
           </p>
           <p className="text-sm text-text-dim leading-relaxed">
-            Har kuni bitta yangi jadval, faqat bitta urinish — ballingiz nechta harakat
-            sarflaganingiz.
+            Istagancha oʻynang — har safar yangi jadval. Ballingiz nechta harakat
+            sarflaganingiz, Reytingda eng yaxshi natijangiz koʻrsatiladi.
           </p>
           <button
             type="button"

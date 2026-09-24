@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GameCardHeader from "@/components/GameCardHeader";
+import ShareButton from "@/components/ShareButton";
 import TicTacToeBoard from "@/components/TicTacToeBoard";
 import { checkWinner } from "@/lib/tictactoe";
 import { useTicTacToeLocal } from "@/lib/useTicTacToeLocal";
@@ -113,6 +114,14 @@ function LocalBoard({ local }) {
     statusText = `${local.turn.toUpperCase()} navbati`;
   }
 
+  // "Qiyin" is unbeatable (full minimax) — a draw is the best any player
+  // can achieve against it, so that's the shareable moment, not a win.
+  const shareableDraw =
+    local.status === "over" &&
+    local.mode === "computer" &&
+    local.difficulty === "hard" &&
+    local.result?.winner === "draw";
+
   return (
     <>
       <p className="text-sm font-bold text-center">{statusText}</p>
@@ -141,6 +150,10 @@ function LocalBoard({ local }) {
           </>
         )}
       </div>
+
+      {shareableDraw && (
+        <ShareButton getText={local.shareText} variant="secondary" className="w-full" />
+      )}
 
       <button
         type="button"

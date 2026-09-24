@@ -11,8 +11,8 @@ export default function SpotColorGame({ registerControls }) {
 
   useEffect(() => {
     if (!registerControls) return;
-    registerControls({ streak: game.stats.streak, showDailyBadge: true });
-  }, [registerControls, game.stats.streak]);
+    registerControls({ streak: 0, showDailyBadge: false });
+  }, [registerControls]);
 
   if (!game.mounted || game.phase === "loading" || !game.grid) {
     return (
@@ -30,7 +30,7 @@ export default function SpotColorGame({ registerControls }) {
       <GameCardHeader
         icon="🔍"
         title="Farqni top"
-        subtitle="Boshqalaridan farq qiluvchi katakchani toping — har daraja qiyinlashadi."
+        subtitle="Boshqalaridan farq qiluvchi katakchani toping — istagancha o'ynang."
         onHelp={() => game.setHelpOpen(true)}
         onRestart={game.restart}
       >
@@ -91,12 +91,17 @@ export default function SpotColorGame({ registerControls }) {
               <Stat n={game.stats.played} l="OʻYNALGAN" />
               <Stat n={avgScore} l="OʻRTACHA" />
               <Stat n={game.stats.bestScore} l="ENG YAXSHI" />
-              <Stat n={game.stats.streak} l="KETMA-KET" />
             </div>
 
-            <ShareButton getText={game.shareText} className="w-full" />
+            <ShareButton getText={game.shareText} variant="secondary" className="w-full" />
 
-            <p className="text-xs text-text-dim text-center">Ertaga yangi darajalar bilan qaytib keling!</p>
+            <button
+              type="button"
+              onClick={game.restart}
+              className="w-full bg-accent text-accent-ink font-extrabold text-sm rounded-xl py-3"
+            >
+              Yana oʻynash
+            </button>
           </>
         )}
       </div>
@@ -147,8 +152,8 @@ function SpotHelpModal({ open, onClose }) {
             bossangiz — oʻyin shu yerda tugaydi.
           </p>
           <p className="text-sm text-text-dim leading-relaxed">
-            Har kuni bitta yangi ketma-ket darajalar, faqat bitta urinish — ballingiz nechta
-            darajani toʻgʻri topganingiz.
+            Istagancha oʻynang — har safar yangi ketma-ket darajalar. Ballingiz nechta darajani
+            toʻgʻri topganingiz, Reytingda eng yaxshi natijangiz koʻrsatiladi.
           </p>
           <button
             type="button"

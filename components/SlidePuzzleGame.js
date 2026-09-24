@@ -11,8 +11,8 @@ export default function SlidePuzzleGame({ registerControls }) {
 
   useEffect(() => {
     if (!registerControls) return;
-    registerControls({ streak: game.stats.streak, showDailyBadge: true });
-  }, [registerControls, game.stats.streak]);
+    registerControls({ streak: 0, showDailyBadge: false });
+  }, [registerControls]);
 
   if (!game.mounted || game.phase === "loading" || !game.board) {
     return (
@@ -30,7 +30,7 @@ export default function SlidePuzzleGame({ registerControls }) {
       <GameCardHeader
         icon="🧩"
         title="15 boshqotirma"
-        subtitle="Raqamlarni tartib bilan joylashtiring — kam harakat bilan yakunlang."
+        subtitle="Raqamlarni tartib bilan joylashtiring — istagancha o'ynang."
         onHelp={() => game.setHelpOpen(true)}
         onRestart={game.restart}
       >
@@ -79,12 +79,17 @@ export default function SlidePuzzleGame({ registerControls }) {
               <Stat n={game.stats.played} l="OʻYNALGAN" />
               <Stat n={avgMoves} l="OʻRTACHA" />
               <Stat n={game.stats.bestMoves} l="ENG YAXSHI" />
-              <Stat n={game.stats.streak} l="KETMA-KET" />
             </div>
 
-            <ShareButton getText={game.shareText} className="w-full" />
+            <ShareButton getText={game.shareText} variant="secondary" className="w-full" />
 
-            <p className="text-xs text-text-dim text-center">Ertaga yangi boshqotirma bilan qaytib keling!</p>
+            <button
+              type="button"
+              onClick={game.restart}
+              className="w-full bg-accent text-accent-ink font-extrabold text-sm rounded-xl py-3"
+            >
+              Yana oʻynash
+            </button>
           </>
         )}
       </div>
@@ -134,8 +139,8 @@ function SlideHelpModal({ open, onClose }) {
             Raqamlarni 1 dan 15 gacha tartib bilan joylashtirsangiz — oʻyin tugaydi.
           </p>
           <p className="text-sm text-text-dim leading-relaxed">
-            Har kuni bitta yangi aralashtirilgan jadval, faqat bitta urinish — ballingiz nechta
-            harakat sarflaganingiz.
+            Istagancha oʻynang — har safar yangi aralashtirilgan jadval. Reytingda eng yaxshi
+            natijangiz (eng kam harakat) koʻrsatiladi.
           </p>
           <button
             type="button"
