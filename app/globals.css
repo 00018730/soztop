@@ -62,6 +62,87 @@
   }
 }
 
+/* Accent color presets, chosen in Sozlamalar. Green is the default look
+   defined by :root / :root[data-theme="light"] above and needs no
+   override here. Each other preset only touches the three accent tokens
+   (--accent/--accent-strong/--accent-ink) — every other color, including
+   --amber used by "O" marks and second discs, is untouched so those stay
+   readable regardless of accent choice. Dark-mode values apply via the
+   plain [data-accent="…"] selector (same specificity tier as :root);
+   light mode needs its own block both for an explicit data-theme="light"
+   and for prefers-color-scheme, mirroring the pattern above. */
+:root[data-accent="blue"] {
+  --accent: #38bdf8;
+  --accent-strong: #0ea5e9;
+  --accent-ink: #031b26;
+}
+:root[data-theme="light"][data-accent="blue"] {
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-ink: #eff6ff;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"])[data-accent="blue"] {
+    --accent: #2563eb;
+    --accent-strong: #1d4ed8;
+    --accent-ink: #eff6ff;
+  }
+}
+
+:root[data-accent="purple"] {
+  --accent: #c084fc;
+  --accent-strong: #a855f7;
+  --accent-ink: #1e0a2e;
+}
+:root[data-theme="light"][data-accent="purple"] {
+  --accent: #7c3aed;
+  --accent-strong: #6d28d9;
+  --accent-ink: #f5f3ff;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"])[data-accent="purple"] {
+    --accent: #7c3aed;
+    --accent-strong: #6d28d9;
+    --accent-ink: #f5f3ff;
+  }
+}
+
+:root[data-accent="rose"] {
+  --accent: #fb7185;
+  --accent-strong: #f43f5e;
+  --accent-ink: #2a0a10;
+}
+:root[data-theme="light"][data-accent="rose"] {
+  --accent: #e11d48;
+  --accent-strong: #be123c;
+  --accent-ink: #fff1f2;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"])[data-accent="rose"] {
+    --accent: #e11d48;
+    --accent-strong: #be123c;
+    --accent-ink: #fff1f2;
+  }
+}
+
+:root[data-accent="orange"] {
+  --accent: #fb923c;
+  --accent-strong: #f97316;
+  --accent-ink: #2a1205;
+}
+:root[data-theme="light"][data-accent="orange"] {
+  --accent: #ea580c;
+  --accent-strong: #c2410c;
+  --accent-ink: #fff7ed;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"])[data-accent="orange"] {
+    --accent: #ea580c;
+    --accent-strong: #c2410c;
+    --accent-ink: #fff7ed;
+  }
+}
+
 @theme inline {
   --color-bg: var(--bg);
   --color-bg-soft: var(--bg-soft);

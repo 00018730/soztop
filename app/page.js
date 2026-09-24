@@ -10,8 +10,27 @@ import SettingsPage from "@/components/SettingsPage";
 import ReytingPage from "@/components/ReytingPage";
 import WordGame from "@/components/WordGame";
 import CodeBreakerGame from "@/components/CodeBreakerGame";
+import ColorMatchGame from "@/components/ColorMatchGame";
+import SpotColorGame from "@/components/SpotColorGame";
+import TicTacToeGame from "@/components/TicTacToeGame";
+import MemoryMatchGame from "@/components/MemoryMatchGame";
+import ConnectFourGame from "@/components/ConnectFourGame";
+import Game2048 from "@/components/Game2048";
+import SlidePuzzleGame from "@/components/SlidePuzzleGame";
+import { readFavoriteGame } from "@/lib/favoriteGame";
 
 const GAME_KEY = "soztop-active-game";
+const VALID_GAMES = [
+  "word",
+  "codebreaker",
+  "color",
+  "spot",
+  "tictactoe",
+  "memory",
+  "connectfour",
+  "2048",
+  "slide",
+];
 
 export default function Home() {
   // Defaults on first paint (and on the server) so hydration always
@@ -23,8 +42,15 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(GAME_KEY);
-      if (saved === "word" || saved === "codebreaker") setActiveGame(saved);
+      // A pinned favorite always wins on load — that's the whole point of
+      // pinning one, as opposed to just restoring whatever was last played.
+      const favorite = readFavoriteGame();
+      if (VALID_GAMES.includes(favorite)) {
+        setActiveGame(favorite);
+      } else {
+        const saved = localStorage.getItem(GAME_KEY);
+        if (VALID_GAMES.includes(saved)) setActiveGame(saved);
+      }
     } catch {
       /* best-effort only */
     }
@@ -67,10 +93,28 @@ export default function Home() {
         <div className="flex-1 min-h-0 overflow-y-auto pb-16 md:pb-0">
           {view === "home" && (
             <div className="max-w-[1100px] mx-auto px-4 sm:px-6 py-4 flex flex-col lg:h-full">
-              {activeGame === "word" ? (
-                <WordGame key="word" registerControls={registerControls} />
-              ) : (
+              {activeGame === "word" && <WordGame key="word" registerControls={registerControls} />}
+              {activeGame === "codebreaker" && (
                 <CodeBreakerGame key="codebreaker" registerControls={registerControls} />
+              )}
+              {activeGame === "color" && (
+                <ColorMatchGame key="color" registerControls={registerControls} />
+              )}
+              {activeGame === "spot" && (
+                <SpotColorGame key="spot" registerControls={registerControls} />
+              )}
+              {activeGame === "tictactoe" && (
+                <TicTacToeGame key="tictactoe" registerControls={registerControls} />
+              )}
+              {activeGame === "memory" && (
+                <MemoryMatchGame key="memory" registerControls={registerControls} />
+              )}
+              {activeGame === "connectfour" && (
+                <ConnectFourGame key="connectfour" registerControls={registerControls} />
+              )}
+              {activeGame === "2048" && <Game2048 key="2048" registerControls={registerControls} />}
+              {activeGame === "slide" && (
+                <SlidePuzzleGame key="slide" registerControls={registerControls} />
               )}
             </div>
           )}

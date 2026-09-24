@@ -62,6 +62,18 @@ export default function TopBar({ streak = 0, dateLabel, showDailyBadge = true, o
     setToday(`${d.getDate()}-${UZ_MONTHS[d.getMonth()]}`);
   }, []);
 
+  // TopBar renders on every view, so this is the one place that needs to
+  // apply the saved accent color on load — Sozlamalar's picker only needs
+  // to handle changes made while it's open.
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("soztop-accent");
+      if (saved && saved !== "green") document.documentElement.setAttribute("data-accent", saved);
+    } catch {
+      /* best-effort only */
+    }
+  }, []);
+
   return (
     <header className="flex items-center justify-between gap-3 px-4 sm:px-6 py-3 border-b border-border">
       <div className="flex items-center gap-3">
