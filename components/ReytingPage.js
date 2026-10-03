@@ -17,17 +17,22 @@ const GAMES = [
   { id: "spot", label: "Farqni top", icon: "🔍" },
   { id: "memory", label: "Xotira o'yini", icon: "🧠" },
   { id: "slide", label: "15 boshqotirma", icon: "🧩" },
+  { id: "wordchain", label: "Soʻz zanjiri", icon: "🔗" },
+  { id: "sanoq", label: "Sanoq", icon: "🧮" },
 ];
 
-// Rang topish / Farqni top / Xotira o'yini / 15 boshqotirma are unlimited
-// replay, not daily — there's no single shared puzzle to compare "today",
-// so Reyting ranks these by personal best instead (leaderboard_totals'
-// min_score for lower-is-better games, max_score for higher-is-better).
+// Rang topish / Farqni top / Xotira o'yini / 15 boshqotirma / Soʻz zanjiri /
+// Sanoq are unlimited replay, not daily — there's no single shared puzzle
+// to compare "today", so Reyting ranks these by personal best instead
+// (leaderboard_totals' min_score for lower-is-better games, max_score for
+// higher-is-better).
 const SCORE_GAMES = {
   color: { length: 3, sortAsc: false, unit: "ball" },
   spot: { length: 9, sortAsc: false, unit: "daraja" },
   memory: { length: 16, sortAsc: true, unit: "harakat" },
   slide: { length: 15, sortAsc: true, unit: "harakat" },
+  wordchain: { length: 1, sortAsc: false, unit: "soʻz" },
+  sanoq: { length: 1, sortAsc: false, unit: "ball" },
 };
 
 const MEDALS = ["🥇", "🥈", "🥉"];

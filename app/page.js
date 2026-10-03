@@ -17,6 +17,8 @@ import MemoryMatchGame from "@/components/MemoryMatchGame";
 import ConnectFourGame from "@/components/ConnectFourGame";
 import Game2048 from "@/components/Game2048";
 import SlidePuzzleGame from "@/components/SlidePuzzleGame";
+import WordChainGame from "@/components/WordChainGame";
+import SanoqGame from "@/components/SanoqGame";
 import { readFavoriteGame } from "@/lib/favoriteGame";
 
 const GAME_KEY = "soztop-active-game";
@@ -30,6 +32,8 @@ const VALID_GAMES = [
   "connectfour",
   "2048",
   "slide",
+  "wordchain",
+  "sanoq",
 ];
 
 export default function Home() {
@@ -116,6 +120,10 @@ export default function Home() {
               {activeGame === "slide" && (
                 <SlidePuzzleGame key="slide" registerControls={registerControls} />
               )}
+              {activeGame === "wordchain" && (
+                <WordChainGame key="wordchain" registerControls={registerControls} />
+              )}
+              {activeGame === "sanoq" && <SanoqGame key="sanoq" registerControls={registerControls} />}
             </div>
           )}
 

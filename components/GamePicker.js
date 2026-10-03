@@ -58,6 +58,18 @@ const GAMES = [
     title: "15 boshqotirma",
     subtitle: "Raqamlarni tartib bilan joylashtiring — kam harakat bilan yakunlang.",
   },
+  {
+    id: "wordchain",
+    icon: "🔗",
+    title: "Soʻz zanjiri",
+    subtitle: "Oxirgi harfdan boshlab soʻz ayting — vaqtga qarshi, istagancha o'ynang.",
+  },
+  {
+    id: "sanoq",
+    icon: "🧮",
+    title: "Sanoq",
+    subtitle: "Idishdagi shakllarni sanang — qanchasi bor ekan?",
+  },
 ];
 
 export default function GamePicker({ activeGame, onSelect }) {

@@ -9,6 +9,8 @@ import { SCORE_BUCKETS, readColorStats } from "@/lib/useColorMatch";
 import { readSpotStats } from "@/lib/useSpotColor";
 import { readMemoryStats } from "@/lib/useMemoryMatch";
 import { readSlideStats } from "@/lib/useSlidePuzzle";
+import { readWordChainStats } from "@/lib/useWordChain";
+import { readSanoqStats } from "@/lib/useSanoq";
 
 const GAMES = [
   { id: "word", label: "Soʻztop", icon: "🍃" },
@@ -17,6 +19,8 @@ const GAMES = [
   { id: "spot", label: "Farqni top", icon: "🔍" },
   { id: "memory", label: "Xotira o'yini", icon: "🧠" },
   { id: "slide", label: "15 boshqotirma", icon: "🧩" },
+  { id: "wordchain", label: "Soʻz zanjiri", icon: "🔗" },
+  { id: "sanoq", label: "Sanoq", icon: "🧮" },
 ];
 
 export default function StatsPage() {
@@ -45,7 +49,11 @@ export default function StatsPage() {
             ? readSpotStats()
             : game === "memory"
               ? readMemoryStats()
-              : readSlideStats();
+              : game === "slide"
+                ? readSlideStats()
+                : game === "wordchain"
+                  ? readWordChainStats()
+                  : readSanoqStats();
 
   if (!mounted || !stats) {
     return (
@@ -122,6 +130,10 @@ export default function StatsPage() {
         <MemoryStatsBody stats={stats} />
       ) : game === "slide" ? (
         <SlideStatsBody stats={stats} />
+      ) : game === "wordchain" ? (
+        <WordChainStatsBody stats={stats} />
+      ) : game === "sanoq" ? (
+        <SanoqStatsBody stats={stats} />
       ) : (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -264,6 +276,30 @@ function SlideStatsBody({ stats }) {
       <Tile n={stats.played} l="OʻYNALGAN" />
       <Tile n={avgMoves} l="OʻRTACHA HARAKAT" />
       <Tile n={stats.bestMoves} l="ENG YAXSHI" />
+    </div>
+  );
+}
+
+function WordChainStatsBody({ stats }) {
+  const avgWords = stats.played > 0 ? Math.round(stats.totalWords / stats.played) : 0;
+
+  return (
+    <div className="grid grid-cols-3 gap-3">
+      <Tile n={stats.played} l="OʻYNALGAN" />
+      <Tile n={avgWords} l="OʻRTACHA SOʻZ" />
+      <Tile n={stats.bestScore} l="ENG YAXSHI" />
+    </div>
+  );
+}
+
+function SanoqStatsBody({ stats }) {
+  const avgScore = stats.played > 0 ? Math.round(stats.totalScore / stats.played) : 0;
+
+  return (
+    <div className="grid grid-cols-3 gap-3">
+      <Tile n={stats.played} l="OʻYNALGAN" />
+      <Tile n={avgScore} l="OʻRTACHA BALL" />
+      <Tile n={stats.bestScore} l="ENG YAXSHI" />
     </div>
   );
 }
